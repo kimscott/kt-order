@@ -30,3 +30,12 @@ spring:
         output:
           destination: shop
           contentType: application/json
+          
+          
+api:
+  url:
+    product: localhost:8081
+          
+          
+          
+          

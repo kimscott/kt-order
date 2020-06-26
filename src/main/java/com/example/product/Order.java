@@ -6,20 +6,23 @@ import javax.persistence.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.messaging.Processor;
+import org.springframework.core.env.Environment;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.util.MimeTypeUtils;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 @Entity
 @Table(name="Order_table")
 public class Order {
-	
-	@Autowired
-	OrderRepository orderRepository;
 
 	@Id
 	@GeneratedValue
@@ -28,6 +31,27 @@ public class Order {
 	int qty;
 	String productName;
 	String orderStatus = "OrderPlaced";
+	
+	
+//	@PrePersist
+//	public void productCheck() {
+//		
+//		RestTemplate restTemplate = OrderApplication.applicationContext.getBean(RestTemplate.class);
+//        Environment env = OrderApplication.applicationContext.getEnvironment();
+//        
+//        
+//		String productUrl = env.getProperty("api.url.product") + "/product/" + productId;
+//
+//        ResponseEntity<String> productEntity = restTemplate.getForEntity(productUrl, String.class);
+//        JsonParser parser = new JsonParser();
+//        JsonObject jsonObject = parser.parse(productEntity.getBody()).getAsJsonObject();
+//
+//
+//        if( jsonObject.get("stock").getAsInt() < this.getQty()){
+//            throw new RuntimeException("No Available stock!");
+//        }
+//		
+//	}
 	
 	@PostPersist
 	public void sendOrderEvent() {
