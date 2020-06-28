@@ -33,25 +33,26 @@ public class Order {
 	String orderStatus = "OrderPlaced";
 	
 	
-//	@PrePersist
-//	public void productCheck() {
-//		
-//		RestTemplate restTemplate = OrderApplication.applicationContext.getBean(RestTemplate.class);
-//        Environment env = OrderApplication.applicationContext.getEnvironment();
-//        
-//        
-//		String productUrl = env.getProperty("api.url.product") + "/product/" + productId;
-//
-//        ResponseEntity<String> productEntity = restTemplate.getForEntity(productUrl, String.class);
-//        JsonParser parser = new JsonParser();
-//        JsonObject jsonObject = parser.parse(productEntity.getBody()).getAsJsonObject();
-//
-//
-//        if( jsonObject.get("stock").getAsInt() < this.getQty()){
-//            throw new RuntimeException("No Available stock!");
-//        }
-//		
-//	}
+	@PrePersist
+	public void productCheck() {
+		
+		RestTemplate restTemplate = OrderApplication.applicationContext.getBean(RestTemplate.class);
+        Environment env = OrderApplication.applicationContext.getEnvironment();
+        
+        
+		String productUrl = "http://localhost:8081" + "/products/" + productId;
+//		String productUrl = env.getProperty("api.url.product") + "/products/" + productId;
+
+        ResponseEntity<String> productEntity = restTemplate.getForEntity(productUrl, String.class);
+        JsonParser parser = new JsonParser();
+        JsonObject jsonObject = parser.parse(productEntity.getBody()).getAsJsonObject();
+
+
+        if( jsonObject.get("stock").getAsInt() < this.getQty()){
+            throw new RuntimeException("No Available stock!");
+        }
+		
+	}
 	
 	@PostPersist
 	public void sendOrderEvent() {
