@@ -34,7 +34,7 @@ spring:
           
 api:
   url:
-    product: localhost:8081
+    product: http://localhost:8081
           
           
           
